@@ -1,9 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "project-stars.fullname" . }}-mysql
-  labels:
-    app: mysql
+  name: mysql-deployment
 spec:
   replicas: 1
   selector:
@@ -15,29 +13,35 @@ spec:
         app: mysql
     spec:
       containers:
-        - name: mysql
-          image: {{ .Values.mysql.image }}
-          ports:
-            - containerPort: 3306
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "project-stars.fullname" . }}-mysql-secret
-                  key: MYSQL_ROOT_PASSWORD
-            - name: MYSQL_DATABASE
-              value: {{ .Values.mysql.database }}
-            - name: MYSQL_USER
-              value: {{ .Values.mysql.user }}
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "project-stars.fullname" . }}-mysql-secret
-                  key: MYSQL_PASSWORD
-          volumeMounts:
-            - name: init-sql
-              mountPath: /docker-entrypoint-initdb.d
-      volumes:
+      - name: mysql
+        image: mysql:8.0
+        ports:
+        - containerPort: {{ .Values.mysql.port }}
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
+        volumeMounts:
         - name: init-sql
-          configMap:
-            name: {{ include "project-stars.fullname" . }}-mysql-init-sql
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: init-sql
+        configMap:
+          name: mysql-init-sql

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-sql
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS testdb;
+    USE testdb;
+    CREATE TABLE IF NOT EXISTS images (
+       id_images INT AUTO_INCREMENT PRIMARY KEY,
+       image_url VARCHAR(255) NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS visitors (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      visit_count INT NOT NULL DEFAULT 0
+    );
+
+    INSERT INTO images (image_url) VALUES 
+    ("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQpArEoEZ1VHxhyDql-WVesjhL7fvjTHu51g&s"),
+    ("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFvu6HM8akCU-hEUkKwKyKkHwSKlle4sFBng&s"),
+    ("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYI-PhTZDz-MQDRy1-og36KLCmUPxYC1VYZQ&s");
+
+    INSERT INTO visitors (visit_count) VALUES (0);
