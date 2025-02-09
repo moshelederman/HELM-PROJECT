@@ -46,6 +46,9 @@ jobs:
 
       - name: Debug AWS Credentials
         run: aws s3 ls s3://moshe-terrarorm --region us-east-1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
 
       - name: Terraform Plan
         env:
