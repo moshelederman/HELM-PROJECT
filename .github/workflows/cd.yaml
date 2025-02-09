@@ -32,6 +32,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
+          TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
 
       - name: Terraform Plan
         env:
@@ -39,6 +41,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
+          TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
@@ -47,6 +51,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
+          TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
         run: terraform apply -auto-approve tfplan
 
   deploy:
