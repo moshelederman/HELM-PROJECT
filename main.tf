@@ -1,7 +1,7 @@
 provider "google" {
-  credentials = "var.CREDENTIALS_GKE"
-  project     = "var.GCP_PROJECT_ID"
-  region      = "us-east1"
+  credentials = var.CREDENTIALS_GKE
+  project     = "var.GCP_PROJECT_ID
+  region      = var.GKE_REGION
 }
 
 terraform {
@@ -15,7 +15,7 @@ terraform {
 
 resource "google_container_cluster" "primary" {
   name     = "gke-cluster"
-  location = "us-east1"
+  location = var.GKE_REGION
 
   initial_node_count = 2
   node_config {
@@ -25,7 +25,7 @@ resource "google_container_cluster" "primary" {
 
 resource "google_container_node_pool" "primary_nodes" {
   name       = "primary-node-pool"
-  location   = "us-east1"
+  location   = var.GKE_REGION
   cluster    = google_container_cluster.primary.name
   initial_node_count = 2
 
@@ -38,16 +38,18 @@ output "kubeconfig" {
   value = google_container_cluster.primary.endpoint
 }
 
-#resource "local_file" "kubeconfig" {
-#  filename = "${path.module}/kubeconfig.yaml"
-#  content  = google_container_cluster.primary.endpoint
-#}
 
-#variable "GCP_PROJECT_ID" {
-#  description = "GCP Project ID"
-#}
+variable "GCP_PROJECT_ID" {
+  description = "GCP Project ID"
+  type        = string
+}
 
-variable "region" {
+variable "CREDENTIALS_GKE" {
+  description = "Path to the JSON credentials file"
+  type        = string
+}
+
+variable "GKE_REGION" {
   description = "GCP Region"
   default     = "us-east1"
 }
