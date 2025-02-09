@@ -38,6 +38,11 @@ jobs:
       - name: Debug GCP Credentials
         run: cat $GOOGLE_APPLICATION_CREDENTIALS
 
+      - name: Debug GCP Project
+        run: |
+          echo "Project ID: $GCP_PROJECT_ID"
+          echo "Service Account: $(gcloud auth list --format='value(account)')"
+        
       - name: Debug Terraform Variables
         run: |
           echo "GCP_PROJECT_ID: $TF_VAR_GCP_PROJECT_ID"
