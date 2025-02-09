@@ -43,7 +43,7 @@ output "kubeconfig" {
 #  content  = google_container_cluster.primary.endpoint
 #}
 
-variable "project" {
+variable "GCP_PROJECT_ID" {
   description = "GCP Project ID"
 }
 
