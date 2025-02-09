@@ -1,0 +1,77 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: '1.4.0'
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.CREDENTIALS_GKE }}'
+
+      - name: Terraform Init
+        run: terraform init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+          GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
+          TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Terraform Plan
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+          GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
+          TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+          GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
+          TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+        run: terraform apply -auto-approve tfplan
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: terraform
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.CREDENTIALS_GKE }}'
+
+      - name: Set up gcloud CLI
+        run: |
+          gcloud auth activate-service-account --key-file=$GCP_CREDENTIALS
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GKE_REGION }} --project ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: Apply Helm chart
+        run: |
+          helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.6
+          helm install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.6
