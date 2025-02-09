@@ -18,7 +18,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: '1.4.0'
+          terraform_version: '1.5.0'
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
@@ -35,6 +35,18 @@ jobs:
           TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
 
+      - name: Debug GCP Credentials
+        run: cat $GOOGLE_APPLICATION_CREDENTIALS
+
+      - name: Debug Terraform Variables
+        run: |
+          echo "Project ID: $TF_VAR_project_id"
+          echo "Region: $TF_VAR_gke_region"
+          echo "Credentials Path: $GOOGLE_APPLICATION_CREDENTIALS"
+
+      - name: Debug AWS Credentials
+        run: aws s3 ls s3://moshe-terrarorm --region us-east-1
+
       - name: Terraform Plan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
@@ -43,7 +55,7 @@ jobs:
           TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
           TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=tfplan -input=false
 
       - name: Terraform Apply
         env:
