@@ -47,6 +47,7 @@ variable "GCP_PROJECT_ID" {
 variable "CREDENTIALS_GKE" {
   description = "Path to the JSON credentials file"
   type        = string
+  default     = "credentials.json"
 }
 
 variable "GKE_REGION" {

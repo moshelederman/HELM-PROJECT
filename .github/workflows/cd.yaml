@@ -32,7 +32,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
+          TF_VAR_CREDENTIALS_GKE: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
 
       - name: Debug GCP Credentials
@@ -55,7 +55,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
+          TF_VAR_CREDENTIALS_GKE: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
         run: terraform plan -out=tfplan -input=false
 
@@ -65,7 +65,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
+          TF_VAR_CREDENTIALS_GKE: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
         run: terraform apply -auto-approve tfplan
 
