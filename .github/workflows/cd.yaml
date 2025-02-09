@@ -31,7 +31,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
-          TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
 
@@ -40,9 +40,8 @@ jobs:
 
       - name: Debug Terraform Variables
         run: |
-          echo "Project ID: $TF_VAR_project_id"
-          echo "Region: $TF_VAR_gke_region"
-          echo "Credentials Path: $GOOGLE_APPLICATION_CREDENTIALS"
+          echo "GCP_PROJECT_ID: $TF_VAR_GCP_PROJECT_ID"
+          echo "CREDENTIALS_GKE: $TF_VAR_CREDENTIALS_GKE"
 
       - name: Debug AWS Credentials
         run: aws s3 ls s3://moshe-terrarorm --region us-east-1
@@ -55,7 +54,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
-          TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
         run: terraform plan -out=tfplan -input=false
@@ -65,7 +64,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
-          TF_VAR_project_id: ${{ secrets.GCP_PROJECT_ID }}
+          TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           TF_VAR_credentials_gke: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_gke_region: ${{ secrets.GKE_REGION }}
         run: terraform apply -auto-approve tfplan
