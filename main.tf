@@ -1,5 +1,4 @@
 provider "google" {
-  credentials = var.CREDENTIALS_GKE
   project     = var.GCP_PROJECT_ID
   region      = var.GKE_REGION
 }
@@ -54,4 +53,3 @@ variable "GKE_REGION" {
   description = "GCP Region"
   default     = "us-east1"
 }
-#some change
