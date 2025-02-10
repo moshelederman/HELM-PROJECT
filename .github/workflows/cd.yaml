@@ -88,6 +88,9 @@ jobs:
           credentials_json: '${{ secrets.CREDENTIALS_GKE }}'
 
       - name: Set up gcloud CLI
+        env:
+          GCP_CREDENTIALS: ${{ secrets.CREDENTIALS_GKE }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.CREDENTIALS_GKE }}
         run: |
           gcloud auth activate-service-account --key-file=$GCP_CREDENTIALS
           gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GKE_REGION }} --project ${{ secrets.GCP_PROJECT_ID }}
