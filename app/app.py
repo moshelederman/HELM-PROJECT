@@ -3,6 +3,7 @@ from flask import Flask, render_template, jsonify
 import os
 import mysql.connector
 from dotenv import load_dotenv
+from prometheus_client import start_http_server, Summary, Counter
 
 FLASK_DEBUG=1
 
@@ -18,6 +19,15 @@ db_config = {
     'password': os.getenv('MYSQL_PASSWORD'),
     'database': os.getenv('MYSQL_DATABASE')
 }
+
+# Start Prometheus metrics server
+start_http_server(8000)
+
+# Create Prometheus metrics
+REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
+VISIT_COUNTER = Counter('app_visit_count', 'Total number of visits')
+DATABASE_ERRORS = Counter('database_errors_total', 'Total number of database errors')
+IMAGE_GAUGE = Gauge('current_image', 'Currently displayed image URL')
 
 @app.route('/')
 def display_images():
@@ -40,6 +50,10 @@ def display_images():
 
         # בדיקת תוצאה
         image_url = result[0] if result else None
+
+        # Update Prometheus metrics
+        VISIT_COUNTER.inc()
+        IMAGE_GAUGE.set(image_url if image_url else '')
 
         # סגירת ההתחברות למסד הנתונים
         cursor.close()

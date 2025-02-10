@@ -21,3 +21,5 @@ spec:
         envFrom:
         - configMapRef:
             name: app-config
+        - containerPort: {{ .Values.prometheus.metricsPort }}
+          name: prometheus-metrics

@@ -124,5 +124,5 @@ jobs:
 
       - name: Apply Helm chart
         run: |
-          helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.6
-          helm install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.6
+          helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.7
+          helm install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.7

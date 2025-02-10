@@ -20,4 +20,7 @@ mysql:
 initSQL:
   enabled: true
 
+prometheus:
+  metricsPort: 8000
+
 resources: {}
