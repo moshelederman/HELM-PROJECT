@@ -1,4 +1,5 @@
 provider "google" {
+  credentials = var.CREDENTIALS_GKE
   project     = var.GCP_PROJECT_ID
   region      = var.GKE_REGION
 }
@@ -46,7 +47,6 @@ variable "GCP_PROJECT_ID" {
 variable "CREDENTIALS_GKE" {
   description = "Path to the JSON credentials file"
   type        = string
-  default     = "credentials.json"
 }
 
 variable "GKE_REGION" {
