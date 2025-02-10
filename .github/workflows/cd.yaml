@@ -100,4 +100,3 @@ jobs:
         run: |
           helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.6
           helm install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.6
-          #some change
