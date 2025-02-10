@@ -10,7 +10,7 @@ on:
 
 jobs:
   terraform:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -75,7 +75,7 @@ jobs:
         run: terraform apply -auto-approve tfplan
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: terraform
 
     steps:
@@ -94,12 +94,15 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           version: 'latest'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.CREDENTIALS_GKE }}
 
-      - name: Install gke-gcloud-auth-plugin
+      - name: Install gke-gcloud-auth-plugin via gcloud
         run: |
-          sudo apt-get update
-          sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
-
+          gcloud components install gke-gcloud-auth-plugin
+        env:
+          CLOUDSDK_CORE_DISABLE_PROMPTS: '1'
+                
       - name: Configure kubectl to use the plugin
         run: |
           gcloud config set project $GCP_PROJECT_ID
