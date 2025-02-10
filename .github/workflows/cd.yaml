@@ -33,6 +33,7 @@ jobs:
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
+          TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
 
       - name: Debug GCP Credentials
         run: cat $GOOGLE_APPLICATION_CREDENTIALS
@@ -60,6 +61,7 @@ jobs:
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
+          TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
         run: terraform plan -out=tfplan -input=false
 
       - name: Terraform Apply
@@ -69,6 +71,7 @@ jobs:
           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
           TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
+          TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
         run: terraform apply -auto-approve tfplan
 
   deploy:
