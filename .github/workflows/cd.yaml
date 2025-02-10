@@ -82,18 +82,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Create GCP credentials file
+        run: echo "${{ secrets.CREDENTIALS_GKE }}" > $HOME/gcp-key.json        
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.CREDENTIALS_GKE }}'
 
       - name: Set up gcloud CLI
-        env:
-          GCP_CREDENTIALS: ${{ secrets.CREDENTIALS_GKE }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.CREDENTIALS_GKE }}
         run: |
-          gcloud auth activate-service-account --key-file=$GCP_CREDENTIALS
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GKE_REGION }} --project ${{ secrets.GCP_PROJECT_ID }}
+          gcloud config set project $GCP_PROJECT_ID
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GKE_REGION }}
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Install Helm
         run: |
