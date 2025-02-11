@@ -1,12 +1,10 @@
 name: CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
 
 jobs:
   terraform:
@@ -124,5 +122,5 @@ jobs:
 
       - name: Apply Helm chart
         run: |
-          helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.7
-          helm install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.7
+          helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.8
+          helm install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.8

@@ -2,10 +2,16 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: your-app-servicemonitor
+  labels:
+    release: prometheus
 spec:
   selector:
     matchLabels:
       app: your-app
+  namespaceSelector:
+    matchNames:
+      - your-namespace  # עדכן בהתאם לניימספייס שלך
   endpoints:
-    - port: prometheus-metrics
+    - port: metrics
       interval: 15s
+      path: /metrics
