@@ -122,5 +122,9 @@ jobs:
 
       - name: Apply Helm chart
         run: |
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
+          helm install prometheus prometheus-community/kube-prometheus-stack
+          kubectl wait --for condition=established --timeout=60s crd/servicemonitors.monitoring.coreos.com
           helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.8
           helm install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.8
