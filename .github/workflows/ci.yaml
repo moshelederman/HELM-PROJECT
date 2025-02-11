@@ -47,6 +47,8 @@ jobs:
 
       - name: Navigate, stop existing containers, and start new ones
         run: |
+          ls -la
+          cd app
           docker-compose build
 
       - name: Log in to Docker Hub
