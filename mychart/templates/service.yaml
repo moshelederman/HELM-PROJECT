@@ -2,15 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: app-service
+  namespace: default
+  labels:
+    app: project-stars
 spec:
   selector:
     app: project-stars
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}
-    - protocol: TCP
-      port: 8000
-      targetPort: prometheus-metrics
-      name: prometheus-metrics
   type: {{ .Values.service.type }}
