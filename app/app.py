@@ -20,7 +20,6 @@ db_config = {
 
 # Start Prometheus metrics server
 start_http_server(8000)
-
 # Create Prometheus metrics
 REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
 VISIT_COUNTER = Counter('app_visit_count', 'Total number of visits')
