@@ -60,6 +60,7 @@ jobs:
       - name: Build Docker Image
         run: |
           ls -la
+          cd app
           IMAGE_NAME=moshelederman/project-stars
           BUILD_NUMBER=${{ github.run_number }}
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:3.0.$BUILD_NUMBER .
