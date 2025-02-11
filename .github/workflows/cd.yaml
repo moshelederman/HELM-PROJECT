@@ -119,7 +119,7 @@ jobs:
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-          
+
       - name: Create monitor namespace if not exists
         run: |
           kubectl get namespace monitor || kubectl create namespace monitor
@@ -130,5 +130,6 @@ jobs:
           helm repo update
           helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
           kubectl wait --for condition=established --timeout=60s crd/servicemonitors.monitoring.coreos.com
-          helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.10
-          helm upgrade --install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.10
+          IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/moshelederman/project-stars/tags" | jq -r '.results[0].name')
+          echo "Using Docker image version: $IMAGE_TAG"
+          helm upgrade --install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version $IMAGE_TAG

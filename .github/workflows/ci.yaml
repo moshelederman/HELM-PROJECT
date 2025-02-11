@@ -72,3 +72,18 @@ jobs:
           BUILD_NUMBER=${{ github.run_number }}
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:3.0.$BUILD_NUMBER
+
+      - name: Update Helm Chart Version
+        run: |
+          sed -i "s/^version:.*/version: 0.1.${GITHUB_RUN_NUMBER}/" app/chart/chart.yaml
+          cat app/chart/chart.yaml
+
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: Package Helm Chart
+        run: |
+          helm package mychart
+          ls -la
+          helm push project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz oci://docker.io/moshelederman
