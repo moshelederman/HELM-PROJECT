@@ -119,6 +119,10 @@ jobs:
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+          
+      - name: Create monitor namespace if not exists
+        run: |
+          kubectl get namespace monitor || kubectl create namespace monitor
 
       - name: Apply Helm chart
         run: |
