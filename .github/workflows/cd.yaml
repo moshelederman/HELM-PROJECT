@@ -124,6 +124,12 @@ jobs:
         run: |
           kubectl get namespace monitor || kubectl create namespace monitor
 
+      - name: Get Latest Image Version
+        run: |
+          IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/moshelederman/project-stars/tags" | jq -r '[.results[].name | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | sort_by(.) | last')
+          echo "Using Docker image version: $IMAGE_TAG"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
       - name: Apply Helm chart
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -131,5 +137,5 @@ jobs:
           helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
           kubectl wait --for condition=established --timeout=60s crd/servicemonitors.monitoring.coreos.com
           IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/moshelederman/project-stars/tags" | jq -r '.results[0].name')
-          echo "Using Docker image version: $IMAGE_TAG"
+          echo "Deploying Helm chart with image tag: $IMAGE_TAG"
           helm upgrade --install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version $IMAGE_TAG
