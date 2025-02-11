@@ -18,8 +18,9 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.service.port }}
+          name: http
+        - containerPort: {{ .Values.prometheus.metricsPort }}
+          name: metrics
         envFrom:
         - configMapRef:
             name: app-config
-        - containerPort: {{ .Values.prometheus.metricsPort }}
-          name: prometheus-metrics
