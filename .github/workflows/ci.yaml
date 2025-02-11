@@ -75,7 +75,7 @@ jobs:
 
       - name: Update Helm Chart Version
         run: |
-          sed -i "s/^version:.*/version: 0.1.${GITHUB_RUN_NUMBER}/" app/chart/chart.yaml
+          sed -i "s/^version:.*/version: 0.1.${GITHUB_RUN_NUMBER}/" mychart/chart.yaml
           cat app/chart/chart.yaml
 
       - name: Install Helm
