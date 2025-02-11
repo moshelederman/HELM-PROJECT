@@ -126,5 +126,5 @@ jobs:
           helm repo update
           helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
           kubectl wait --for condition=established --timeout=60s crd/servicemonitors.monitoring.coreos.com
-          helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.8
-          helm upgrade --install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.8
+          helm pull oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.9
+          helm upgrade --install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version 0.1.9
