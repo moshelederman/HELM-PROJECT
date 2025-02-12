@@ -91,6 +91,7 @@ jobs:
 
   terraform:
     runs-on: ubuntu-22.04
+    needs: build
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -157,7 +158,6 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     needs: terraform
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
