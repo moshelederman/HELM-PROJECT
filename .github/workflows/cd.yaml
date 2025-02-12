@@ -1,140 +1,140 @@
-name: CD Pipeline
+# name: CD Pipeline
 
-on:
-  workflow_run:
-    workflows: ["CI"]
-    types:
-      - completed
+# on:
+#   workflow_run:
+#     workflows: ["CI"]
+#     types:
+#       - completed
 
-jobs:
-  terraform:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+# jobs:
+#   terraform:
+#     runs-on: ubuntu-22.04
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: '1.5.0'
+#       - name: Set up Terraform
+#         uses: hashicorp/setup-terraform@v1
+#         with:
+#           terraform_version: '1.5.0'
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.CREDENTIALS_GKE }}'
+#       - name: Authenticate to Google Cloud
+#         uses: google-github-actions/auth@v2
+#         with:
+#           credentials_json: '${{ secrets.CREDENTIALS_GKE }}'
 
-      - name: Terraform Init
-        run: terraform init
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-          GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
-          TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
-          TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
+#       - name: Terraform Init
+#         run: terraform init
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+#           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
+#           TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#           TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
+#           TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
 
-      - name: Debug GCP Credentials
-        run: cat $GOOGLE_APPLICATION_CREDENTIALS
+#       - name: Debug GCP Credentials
+#         run: cat $GOOGLE_APPLICATION_CREDENTIALS
 
-      - name: Debug GCP Project
-        run: |
-          echo "Project ID: $GCP_PROJECT_ID"
-          echo "Service Account: $(gcloud auth list --format='value(account)')"
+#       - name: Debug GCP Project
+#         run: |
+#           echo "Project ID: $GCP_PROJECT_ID"
+#           echo "Service Account: $(gcloud auth list --format='value(account)')"
         
-      - name: Debug Terraform Variables
-        run: |
-          echo "GCP_PROJECT_ID: $TF_VAR_GCP_PROJECT_ID"
-          echo "CREDENTIALS_GKE: $TF_VAR_CREDENTIALS_GKE"
+#       - name: Debug Terraform Variables
+#         run: |
+#           echo "GCP_PROJECT_ID: $TF_VAR_GCP_PROJECT_ID"
+#           echo "CREDENTIALS_GKE: $TF_VAR_CREDENTIALS_GKE"
 
-      - name: Debug AWS Credentials
-        run: aws s3 ls s3://moshe-terrarorm --region us-east-1
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+#       - name: Debug AWS Credentials
+#         run: aws s3 ls s3://moshe-terrarorm --region us-east-1
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
 
-      - name: Terraform Plan
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-          GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
-          TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
-          TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
-        run: terraform plan -out=tfplan -input=false
+#       - name: Terraform Plan
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+#           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
+#           TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#           TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
+#           TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
+#         run: terraform plan -out=tfplan -input=false
 
-      - name: Terraform Apply
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-          GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
-          TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
-          TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
-        run: terraform apply -auto-approve tfplan
+#       - name: Terraform Apply
+#         env:
+#           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+#           GOOGLE_CLOUD_KEYFILE_JSON: ${{ secrets.CREDENTIALS_GKE }}
+#           TF_VAR_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#           TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
+#           TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
+#         run: terraform apply -auto-approve tfplan
 
-  deploy:
-    runs-on: ubuntu-22.04
-    needs: terraform
+#   deploy:
+#     runs-on: ubuntu-22.04
+#     needs: terraform
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Create GCP credentials file
-        run: echo "${{ secrets.CREDENTIALS_GKE }}" > $HOME/gcp-key.json        
+#       - name: Create GCP credentials file
+#         run: echo "${{ secrets.CREDENTIALS_GKE }}" > $HOME/gcp-key.json        
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: '${{ secrets.CREDENTIALS_GKE }}'
+#       - name: Authenticate to Google Cloud
+#         uses: google-github-actions/auth@v1
+#         with:
+#           credentials_json: '${{ secrets.CREDENTIALS_GKE }}'
 
-      - name: Install gcloud SDK
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          version: 'latest'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.CREDENTIALS_GKE }}
+#       - name: Install gcloud SDK
+#         uses: google-github-actions/setup-gcloud@v1
+#         with:
+#           version: 'latest'
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+#           service_account_key: ${{ secrets.CREDENTIALS_GKE }}
 
-      - name: Install gke-gcloud-auth-plugin via gcloud
-        run: |
-          gcloud components install gke-gcloud-auth-plugin
-        env:
-          CLOUDSDK_CORE_DISABLE_PROMPTS: '1'
+#       - name: Install gke-gcloud-auth-plugin via gcloud
+#         run: |
+#           gcloud components install gke-gcloud-auth-plugin
+#         env:
+#           CLOUDSDK_CORE_DISABLE_PROMPTS: '1'
                 
-      - name: Configure kubectl to use the plugin
-        run: |
-          gcloud config set project $GCP_PROJECT_ID
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GKE_REGION }}
-        env:
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          USE_GKE_GCLOUD_AUTH_PLUGIN: True      
+#       - name: Configure kubectl to use the plugin
+#         run: |
+#           gcloud config set project $GCP_PROJECT_ID
+#           gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GKE_REGION }}
+#         env:
+#           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#           USE_GKE_GCLOUD_AUTH_PLUGIN: True      
       
-      - name: Set up gcloud CLI
-        run: |
-          gcloud config set project $GCP_PROJECT_ID
-          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GKE_REGION }}
-        env:
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+#       - name: Set up gcloud CLI
+#         run: |
+#           gcloud config set project $GCP_PROJECT_ID
+#           gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GKE_REGION }}
+#         env:
+#           GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Install Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+#       - name: Install Helm
+#         run: |
+#           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
-      - name: Create monitor namespace if not exists
-        run: |
-          kubectl get namespace monitor || kubectl create namespace monitor
+#       - name: Create monitor namespace if not exists
+#         run: |
+#           kubectl get namespace monitor || kubectl create namespace monitor
 
-      - name: Get Latest Image Version
-        run: |
-          IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/moshelederman/project-stars/tags" | jq -r '[.results[].name | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | sort_by(.) | last')
-          echo "Using Docker image version: $IMAGE_TAG"
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+#       - name: Get Latest Image Version
+#         run: |
+#           IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/moshelederman/project-stars/tags" | jq -r '[.results[].name | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | sort_by(.) | last')
+#           echo "Using Docker image version: $IMAGE_TAG"
+#           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-      - name: Apply Helm chart
-        run: |
-          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-          helm repo update
-          helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
-          kubectl wait --for condition=established --timeout=60s crd/servicemonitors.monitoring.coreos.com
-          helm pull oci://docker.io/moshelederman/project-stars --version 0.1.${GITHUB_RUN_NUMBER} -d ./charts
-          helm install my-release ./charts/project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz
+#       - name: Apply Helm chart
+#         run: |
+#           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#           helm repo update
+#           helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
+#           kubectl wait --for condition=established --timeout=60s crd/servicemonitors.monitoring.coreos.com
+#           helm pull oci://docker.io/moshelederman/project-stars --version 0.1.${GITHUB_RUN_NUMBER} -d ./charts
+#           helm install my-release ./charts/project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz
