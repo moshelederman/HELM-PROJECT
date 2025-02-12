@@ -136,6 +136,5 @@ jobs:
           helm repo update
           helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
           kubectl wait --for condition=established --timeout=60s crd/servicemonitors.monitoring.coreos.com
-          IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/moshelederman/project-stars/tags" | jq -r '.results[0].name')
-          echo "Deploying Helm chart with image tag: $IMAGE_TAG"
-          helm upgrade --install moshe-test oci://registry-1.docker.io/moshelederman/project-stars --version $IMAGE_TAG
+          helm pull oci://docker.io/moshelederman/project-stars --version 0.1.${GITHUB_RUN_NUMBER} -d ./charts
+          helm install my-release ./charts/project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz
