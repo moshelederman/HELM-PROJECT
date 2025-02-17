@@ -1,4 +1,4 @@
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: moshelederman/project-stars
@@ -21,6 +21,7 @@ initSQL:
   enabled: true
 
 prometheus:
-  metricsPort: 8000
+  enabled: true
+  metricsPort: 9000
 
 resources: {}
