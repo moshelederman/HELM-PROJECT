@@ -23,5 +23,10 @@ initSQL:
 prometheus:
   enabled: true
   metricsPort: 9000
+  name: prometheus-service
+  namespace: monitor
+  port: 9090
+  targetPort: 9090
+  type: LoadBalancer 
 
 resources: {}
