@@ -220,6 +220,6 @@ jobs:
           kubectl wait --for condition=established --timeout=60s crd/servicemonitors.monitoring.coreos.com
           helm pull oci://docker.io/moshelederman/project-stars --version 0.1.${GITHUB_RUN_NUMBER}
           helm install my-release project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz
-          helm repo add grafana https://grafana.github.io/helm-charts
-          helm repo update
-          helm upgrade --install loki grafana/loki-stack -n monitor --set loki.image.tag=2.9.3
+        # helm repo add grafana https://grafana.github.io/helm-charts
+        # helm repo update
+        # helm upgrade --install loki grafana/loki-stack -n monitor --set loki.image.tag=2.9.3
