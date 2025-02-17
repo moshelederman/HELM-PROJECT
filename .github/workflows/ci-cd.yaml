@@ -223,3 +223,5 @@ jobs:
           helm repo add grafana https://grafana.github.io/helm-charts
           helm repo update
           helm upgrade --install loki grafana/loki-stack -n monitor --set loki.image.tag=2.9.3
+          sleep 60
+          kubectl get svc -o custom-columns="NAME:.metadata.name,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip" --all-namespaces
