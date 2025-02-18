@@ -3,6 +3,8 @@ kind: ServiceMonitor
 metadata:
   name: your-app-servicemonitor
   namespace: monitor
+  labels:
+    release: prometheus
 spec:
   selector:
     matchLabels:
@@ -11,6 +13,7 @@ spec:
     - port: http
       path: /metrics
       interval: 15s
+      scheme: http
   namespaceSelector:
     matchNames:
       - default
