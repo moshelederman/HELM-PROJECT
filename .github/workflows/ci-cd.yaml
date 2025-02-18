@@ -216,7 +216,7 @@ jobs:
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
-          helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace monitor --create-namespace
+          helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
           kubectl wait --for condition=established --timeout=30s crd/servicemonitors.monitoring.coreos.com
           helm pull oci://docker.io/moshelederman/project-stars --version 0.1.${GITHUB_RUN_NUMBER}
           helm upgrade --install moshe-project project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz
