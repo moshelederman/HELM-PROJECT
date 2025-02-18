@@ -19,8 +19,6 @@ spec:
         ports:
         - containerPort: {{ .Values.service.port }}
           name: http
-        - containerPort: {{ .Values.prometheus.metricsPort }}
-          name: metrics
         envFrom:
         - configMapRef:
             name: app-config
