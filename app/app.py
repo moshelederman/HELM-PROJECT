@@ -19,7 +19,7 @@ db_config = {
 }
 
 # Start Prometheus metrics server
-start_http_server(8000)
+start_http_server(9090)
 
 # Create Prometheus metrics
 REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
