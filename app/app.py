@@ -1,4 +1,4 @@
-# app project
+# app-project
 from flask import Flask, render_template, jsonify
 import os
 import mysql.connector
