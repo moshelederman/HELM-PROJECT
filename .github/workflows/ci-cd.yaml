@@ -216,12 +216,13 @@ jobs:
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
-          helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prometheus/values.yaml -n monitor --create-namespace
+          helm upgrade --install prometheus prometheus-community/prometheus -f prometheus/values.yaml -n monitor --create-namespace
           kubectl wait --for condition=established --timeout=30s crd/servicemonitors.monitoring.coreos.com
           helm pull oci://docker.io/moshelederman/project-stars --version 0.1.${GITHUB_RUN_NUMBER}
           helm upgrade --install moshe-project project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz
           helm repo add grafana https://grafana.github.io/helm-charts
           helm repo update
           helm upgrade --install loki grafana/loki-stack -n monitor --set loki.image.tag=2.9.3
-          sleep 60
+          helm upgrade --install grafana grafana/grafana -n monitor 
+          sleep 50
           kubectl get svc -o custom-columns="NAME:.metadata.name,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip" --all-namespaces | grep -v '<none>'
