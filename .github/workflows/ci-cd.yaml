@@ -116,25 +116,6 @@ jobs:
           TF_VAR_GKE_REGION: ${{ secrets.GKE_REGION }}
           TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
 
-      # - name: Debug GCP Credentials
-      #   run: cat $GOOGLE_APPLICATION_CREDENTIALS
-
-      # - name: Debug GCP Project
-      #   run: |
-      #     echo "Project ID: $GCP_PROJECT_ID"
-      #     echo "Service Account: $(gcloud auth list --format='value(account)')"
-        
-      # - name: Debug Terraform Variables
-      #   run: |
-      #     echo "GCP_PROJECT_ID: $TF_VAR_GCP_PROJECT_ID"
-      #     echo "CREDENTIALS_GKE: $TF_VAR_CREDENTIALS_GKE"
-
-      # - name: Debug AWS Credentials
-      #   run: aws s3 ls s3://moshe-terrarorm --region us-east-1
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-
       - name: Terraform Plan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
