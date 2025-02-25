@@ -22,10 +22,10 @@ db_config = {
 start_http_server(9090)
 
 # Create Prometheus metrics
-REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
-VISIT_COUNTER = Counter('app_visit_count', 'Total number of visits')
-DATABASE_ERRORS = Counter('database_errors_total', 'Total number of database errors')
-IMAGE_GAUGE = Gauge('current_image', 'Currently displayed image URL')
+#REQUEST_TIME = Summary('request_processing_seconds', 'Time spent processing request')
+#VISIT_COUNTER = Counter('app_visit_count', 'Total number of visits')
+#DATABASE_ERRORS = Counter('database_errors_total', 'Total number of database errors')
+NUM_VISITORS = Gauge('num_visitors', 'number of visitors')
 
 @app.route('/')
 def display_images():
@@ -45,8 +45,8 @@ def display_images():
         image_url = result[0] if result else None
 
         # Update Prometheus metrics
-        VISIT_COUNTER.inc()
-        IMAGE_GAUGE.set(visit_count)
+        #VISIT_COUNTER.inc()
+        NUM_VISITORS.set(visit_count)
 
         cursor.close()
         cnx.close()

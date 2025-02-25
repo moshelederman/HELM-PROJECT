@@ -19,3 +19,13 @@ datasources:
         jsonData:
           handleGrafanaManagedAlerts: false
           implementation: prometheus
+
+grafana:
+  dashboardsConfigMaps:
+    default: grafana-dashboard
+
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      folder: /var/lib/grafana/dashboards
