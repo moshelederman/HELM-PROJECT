@@ -204,7 +204,7 @@ jobs:
           kubectl apply -f grafana/grafana-dashboard-configmap.yaml
           helm repo add argo https://argoproj.github.io/argo-helm
           helm repo update
-          kubectl create namespace argocd
+          kubectl get namespace argocd || kubectl create namespace argocd
           helm upgrade --install argocd argo/argo-cd --namespace argocd           
           sleep 40
           kubectl get svc -o custom-columns="NAME:.metadata.name,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip" --all-namespaces | grep -v '<none>'
