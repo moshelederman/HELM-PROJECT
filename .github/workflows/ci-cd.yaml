@@ -218,5 +218,5 @@ jobs:
           sleep 40
           kubectl get svc -o custom-columns="NAME:.metadata.name,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip" --all-namespaces | grep -v '<none>'
           kubectl get secret --namespace monitor grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
-          kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd | base64 -d
+          kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd | base64 -d ; echo
 
