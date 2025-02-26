@@ -188,12 +188,6 @@ jobs:
         run: |
           kubectl get namespace monitor || kubectl create namespace monitor
 
-      - name: Install Helm chart
-        run: |
-          helm pull oci://docker.io/moshelederman/project-stars --version 0.1.${GITHUB_RUN_NUMBER}
-          helm upgrade --install moshe-project project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz
-          kubectl rollout restart deployment app-deployment
-
       - name: Install Prometheus, Grafana and Loki
         run: | 
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -205,6 +199,12 @@ jobs:
           helm upgrade --install loki grafana/loki-stack -n monitor --set loki.image.tag=2.9.3
           helm upgrade --install grafana grafana/grafana -n monitor -f grafana/values.yaml
           kubectl apply -f grafana/grafana-dashboard-configmap.yaml
+
+      - name: Install Helm chart
+        run: |
+          helm pull oci://docker.io/moshelederman/project-stars --version 0.1.${GITHUB_RUN_NUMBER}
+          helm upgrade --install moshe-project project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz
+          kubectl rollout restart deployment app-deployment
 
       - name: Install Argocd
         run: |          
