@@ -187,12 +187,6 @@ jobs:
         run: |
           kubectl get namespace monitor || kubectl create namespace monitor
 
-      # - name: Get Latest Image Version
-      #   run: |
-      #     IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/moshelederman/project-stars/tags" | jq -r '[.results[].name | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | sort_by(.) | last')
-      #     echo "Using Docker image version: $IMAGE_TAG"
-      #     echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-
       - name: Apply Helm chart
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -206,7 +200,9 @@ jobs:
           helm repo update
           helm upgrade --install loki grafana/loki-stack -n monitor --set loki.image.tag=2.9.3
           helm upgrade --install grafana grafana/grafana -n monitor -f grafana/values.yaml
-          kubectl apply -f grafana/grafana-dashboard-configmap.yaml 
+          kubectl apply -f grafana/grafana-dashboard-configmap.yaml
+          kubectl create namespace argocd
+          kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml 
           sleep 50
           kubectl get svc -o custom-columns="NAME:.metadata.name,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip" --all-namespaces | grep -v '<none>'
           kubectl get secret --namespace monitor grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
