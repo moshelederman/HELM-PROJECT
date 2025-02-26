@@ -187,11 +187,11 @@ jobs:
         run: |
           kubectl get namespace monitor || kubectl create namespace monitor
 
-      - name: Get Latest Image Version
-        run: |
-          IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/moshelederman/project-stars/tags" | jq -r '[.results[].name | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | sort_by(.) | last')
-          echo "Using Docker image version: $IMAGE_TAG"
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+      # - name: Get Latest Image Version
+      #   run: |
+      #     IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/moshelederman/project-stars/tags" | jq -r '[.results[].name | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | sort_by(.) | last')
+      #     echo "Using Docker image version: $IMAGE_TAG"
+      #     echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
       - name: Apply Helm chart
         run: |
