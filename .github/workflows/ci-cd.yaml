@@ -46,11 +46,25 @@ jobs:
           echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> $GITHUB_ENV
           echo "MYSQL_HOST=${MYSQL_HOST}" >> $GITHUB_ENV
 
-      - name: Navigate, stop existing containers, and start new ones
+      - name: Docker-Compose Up, Build and Curl Testing 
         run: |
           ls -la
           cd app
           docker-compose build
+          sleep 5
+          docker-compose up
+          for i in {1..7}; do
+                      if curl -f http://localhost:5000; then
+                        echo "Service is available."
+                        exit 0
+                      else
+                        echo "Service not available, retrying in 10 seconds..."
+                        docker-compose logs
+                        sleep 10
+                      fi
+                    done
+                    echo "Service not available after multiple retries."
+                    exit 1
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
