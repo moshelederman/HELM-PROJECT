@@ -227,11 +227,11 @@ jobs:
           helm repo update
           kubectl get namespace argocd || kubectl create namespace argocd
           kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml           
-          kubectl apply -f argocd/vault-app.yaml -n argocd     
+          kubectl apply -f argocd/vault-app.yaml -n argocd   
 
       - name: Receiving information
-        run: |          
-          sleep 40
+        run: |        
+          sleep 30
           kubectl get svc -o custom-columns="NAME:.metadata.name,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip" --all-namespaces | grep -v '<none>'
           echo "grrafana secret"
           kubectl get secret --namespace monitor grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
