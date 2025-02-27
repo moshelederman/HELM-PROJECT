@@ -45,6 +45,11 @@ jobs:
           echo "MYSQL_USER=${MYSQL_USER}" >> $GITHUB_ENV
           echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> $GITHUB_ENV
           echo "MYSQL_HOST=${MYSQL_HOST}" >> $GITHUB_ENV
+          echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" > app/.env
+          echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> app/.env
+          echo "MYSQL_USER=${MYSQL_USER}" >> app/.env
+          echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> app/.env
+          echo "MYSQL_HOST=${MYSQL_HOST}" >> app/.env
 
       - name: Docker-Compose Up, Build and Curl Testing 
         run: |
@@ -52,10 +57,9 @@ jobs:
           ls -la
           cd app
           docker-compose up --build -d
-          sleep 70
-          
+
            for i in {1..7}; do
-             if curl -v http://localhost:5000; then
+             if curl -f http://localhost:5000; then
                echo "✅ Service is available."
                exit 0
              else
