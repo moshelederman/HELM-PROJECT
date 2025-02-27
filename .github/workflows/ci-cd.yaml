@@ -51,8 +51,7 @@ jobs:
           set -e
           ls -la
           cd app
-          docker-compose build
-          docker-compose up -d
+          docker-compose up --build -d
           sleep 70
           
            for i in {1..7}; do
