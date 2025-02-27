@@ -56,12 +56,12 @@ jobs:
           sleep 5
           
           for i in {1..7}; do
-            if curl -f http://localhost:5000; then
+            if curl -f http://127.0.0.1:5000; then
               echo "✅ Service is available."
               exit 0
             else
               echo "⏳ Service not available, retrying in 10 seconds..."
-              docker-compose logs | tail -n 20
+              docker-compose logs
               sleep 10
             fi
           done
