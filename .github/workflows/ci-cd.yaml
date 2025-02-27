@@ -257,14 +257,15 @@ jobs:
           PAGE=1
           while true; do
             echo "📦 Fetching page $PAGE..."
-            IMAGE_TAGS=$(curl -s -H "Authorization: Bearer $TOKEN" \
-              "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}/tags/?page=$PAGE&page_size=100" \
-              | jq -r '.results[] | {name: .name, date: .last_updated} | @base64')
+            RESPONSE=$(curl -s -H "Authorization: Bearer $TOKEN" \
+              "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}/tags/?page=$PAGE&page_size=100")
 
-            if [ -z "$IMAGE_TAGS" ]; then
-              echo "✅ No more images found."
+            if [[ -z "$RESPONSE" || "$RESPONSE" == "null" || "$(echo $RESPONSE | jq '.results | length')" -eq 0 ]]; then
+              echo "✅ No more images found. Stopping."
               break
             fi
+
+            IMAGE_TAGS=$(echo "$RESPONSE" | jq -r '.results[] | {name: .name, date: .last_updated} | @base64')
 
             for TAG in $IMAGE_TAGS; do
               DATA=$(echo $TAG | base64 --decode)
@@ -284,3 +285,4 @@ jobs:
 
             PAGE=$((PAGE + 1))
           done
+
