@@ -237,3 +237,38 @@ jobs:
           kubectl get secret --namespace monitor grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
           echo "argocd secret"
           kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd | base64 --decode ; echo
+
+
+
+  delete_old_docker_images:
+    runs-on: ubuntu-22.04
+    needs: deploy
+    steps:
+      - name: Log in to Docker Hub
+        run: |
+          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST \
+            -d '{"username": "${{ secrets.DOCKER_USERNAME }}", "password": "${{ secrets.DOCKER_PASSWORD }}"}' \
+            https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+          echo "🔑 Authentication successful"
+
+          IMAGE_TAGS=$(curl -s -H "Authorization: Bearer $TOKEN" \
+            "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}/tags/" | jq -r '.results[] | {name: .name, date: .last_updated} | @base64')
+
+          CUTOFF_DATE=$(date -d '30 days ago' +%s)
+
+          for TAG in $IMAGE_TAGS; do
+            DATA=$(echo $TAG | base64 --decode)
+            IMAGE_NAME=$(echo $DATA | jq -r '.name')
+            IMAGE_DATE=$(echo $DATA | jq -r '.date')
+
+            IMAGE_TIMESTAMP=$(date -d "$IMAGE_DATE" +%s)
+
+            if [ "$IMAGE_TIMESTAMP" -lt "$CUTOFF_DATE" ]; then
+              echo "🗑️  Deleting old image: $IMAGE_NAME (Updated: $IMAGE_DATE)"
+              curl -s -X DELETE -H "Authorization: Bearer $TOKEN" \
+                "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}/tags/$IMAGE_NAME/"
+            else
+              echo "✅ Image $IMAGE_NAME is recent, skipping."
+            fi
+          done
