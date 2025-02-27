@@ -184,12 +184,9 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
-      - name: Create monitor namespace if not exists
-        run: |
-          kubectl get namespace monitor || kubectl create namespace monitor
-
       - name: Install Prometheus, Grafana and Loki
-        run: | 
+        run: |
+          kubectl get namespace monitor || kubectl create namespace monitor 
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
           helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prometheus/values.yaml -n monitor --create-namespace
