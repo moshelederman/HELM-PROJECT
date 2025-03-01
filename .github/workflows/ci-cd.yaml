@@ -40,11 +40,6 @@ jobs:
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
         run: |
-          echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" >> $GITHUB_ENV
-          echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> $GITHUB_ENV
-          echo "MYSQL_USER=${MYSQL_USER}" >> $GITHUB_ENV
-          echo "MYSQL_PASSWORD=${MYSQL_PASSWORD}" >> $GITHUB_ENV
-          echo "MYSQL_HOST=${MYSQL_HOST}" >> $GITHUB_ENV
           echo "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}" > app/.env
           echo "MYSQL_DATABASE=${MYSQL_DATABASE}" >> app/.env
           echo "MYSQL_USER=${MYSQL_USER}" >> app/.env
