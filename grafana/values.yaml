@@ -16,6 +16,7 @@ datasources:
         uid: alertmanager
         url: http://prometheus-kube-prometheus-alertmanager.monitor:9093/
         access: proxy
+        isDefault: false
         jsonData:
           handleGrafanaManagedAlerts: false
           implementation: prometheus
