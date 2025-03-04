@@ -24,7 +24,7 @@ INSERT INTO images (image_url) VALUES ("https://encrypted-tbn0.gstatic.com/image
 
 INSERT INTO visitors (visit_count) VALUES (0);
 
-CREATE USER 'user'@'%' IDENTIFIED BY 'example';
+CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'example';
 
 GRANT ALL PRIVILEGES ON testdb.* TO 'user'@'%';
 FLUSH PRIVILEGES;
