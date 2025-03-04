@@ -238,7 +238,7 @@ jobs:
 
   delete_old_docker_images:
     runs-on: ubuntu-22.04
-    needs: deploy
+    needs: build
     steps:
       - name: Delete old Docker images
         run: |
