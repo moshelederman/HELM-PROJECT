@@ -228,15 +228,15 @@ jobs:
           kubectl apply -f argocd/vault-app.yaml -n argocd   
 
       - name: Receiving information
-        run: |        
+        run: |     
           sleep 30
-          kubectl get svc -o custom-columns="NAME:.metadata.name,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip" --all-namespaces | grep -v '<none>'
+          kubectl get svc -o custom-columns="NAME:.metadata.name,EXTERNAL-IP:.status.loadBalancer.ingress[0].ip" --all-namespaces | grep -v '<none>' | awk '{print "http://"$2":5000"}'
           echo "grafana secret: $(kubectl get secret --namespace monitor grafana -o jsonpath="{.data.admin-password}" | base64 --decode)"
           echo "argocd secret: $(kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd | base64 --decode)"
 
 
 
-  delete_old_docker_images:
+  delete_old_files:
     runs-on: ubuntu-22.04
     needs: build
     steps:
