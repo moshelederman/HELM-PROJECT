@@ -245,7 +245,8 @@ jobs:
 
           echo "🔑 Authentication successful"
 
-          CUTOFF_DATE=$(date -d '30 days ago' +%s)
+          DAYS_OLD=25
+          CUTOFF_DATE=$(date -d "$DAYS_OLD days ago" +%s)
 
           PAGE=1
           while true; do
