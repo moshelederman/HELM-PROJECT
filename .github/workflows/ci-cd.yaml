@@ -11,7 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -234,8 +233,6 @@ jobs:
           echo "grafana secret: $(kubectl get secret --namespace monitor grafana -o jsonpath="{.data.admin-password}" | base64 --decode)"
           echo "argocd secret: $(kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd | base64 --decode)"
 
-
-
   delete_old_files:
     runs-on: ubuntu-22.04
     needs: build
@@ -281,4 +278,3 @@ jobs:
 
             PAGE=$((PAGE + 1))
           done
-
