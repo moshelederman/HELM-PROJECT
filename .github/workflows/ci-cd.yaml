@@ -98,7 +98,7 @@ jobs:
       - name: Update Values Image Tag
         run: |
           ls -la
-          sed -i "s|^\(\s*tag:\s*\).*|\0.1.${GITHUB_RUN_NUMBER}|" mychart/values.yaml
+          sed -i "s|^\(\s*tag:\s*\).*|\1 0.1.${GITHUB_RUN_NUMBER}|" mychart/values.yaml
           cat mychart/values.yaml
 
       - name: Install Helm
