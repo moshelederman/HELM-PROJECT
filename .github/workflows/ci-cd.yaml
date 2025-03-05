@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -105,9 +105,9 @@ jobs:
           ls -la
           helm push project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz oci://docker.io/moshelederman
 
-  terraform:
+  GKE_Cluster_Setup:
     runs-on: ubuntu-22.04
-    needs: build
+    needs: Build
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -152,9 +152,9 @@ jobs:
           TF_VAR_CREDENTIALS_GKE: '${{ secrets.CREDENTIALS_GKE }}'
         run: terraform apply -auto-approve tfplan
 
-  deploy:
+  Deploy:
     runs-on: ubuntu-22.04
-    needs: terraform
+    needs: GKE_Cluster_Setup
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -233,11 +233,11 @@ jobs:
           echo "grafana secret: $(kubectl get secret --namespace monitor grafana -o jsonpath="{.data.admin-password}" | base64 --decode)"
           echo "argocd secret: $(kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd | base64 --decode)"
 
-  delete_old_files:
+  Delete_Old_Files:
     runs-on: ubuntu-22.04
-    needs: build
+    needs: Build
     steps:
-      - name: Delete old Docker images
+      - name: Delete old Files
         run: |
           TOKEN=$(curl -s -H "Content-Type: application/json" -X POST \
             -d '{"username": "${{ secrets.DOCKER_USERNAME }}", "password": "${{ secrets.DOCKER_PASSWORD }}"}' \
