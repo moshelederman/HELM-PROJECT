@@ -3,7 +3,7 @@ replicaCount: 2
 image:
   repository: moshelederman/project-stars
   pullPolicy: Always
-  tag: latest
+  tag: 0.1.10
 
 service:
   type: LoadBalancer

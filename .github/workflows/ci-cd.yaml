@@ -95,6 +95,12 @@ jobs:
           sed -i "s/^version:.*/version: 0.1.${GITHUB_RUN_NUMBER}/" mychart/Chart.yaml
           cat mychart/Chart.yaml
 
+      - name: Update Values Image Tag
+        run: |
+          ls -la
+          sed -i "s|^\(\s*tag:\s*\).*|\0.1.${GITHUB_RUN_NUMBER}|" mychart/values.yaml
+          cat mychart/values.yaml
+
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
