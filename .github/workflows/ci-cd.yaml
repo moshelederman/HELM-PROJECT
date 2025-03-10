@@ -218,7 +218,7 @@ jobs:
           helm upgrade --install grafana grafana/grafana -n monitor -f grafana/values.yaml
           kubectl apply -f grafana/grafana-dashboard-configmap.yaml
 
-      - name: Install Helm chart
+      - name: Install Helm Stars Project
         run: |
           helm pull oci://docker.io/moshelederman/project-stars --version 0.1.${GITHUB_RUN_NUMBER}
           helm upgrade --install moshe-project project-stars-0.1.${GITHUB_RUN_NUMBER}.tgz
