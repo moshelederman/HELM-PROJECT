@@ -31,7 +31,8 @@ git clone https://github.com/moshelederman/project-stars.git
 ### Deploy using Helm
 #### Install application using Helm
 ```sh
-helm upgrade --install project-stars ./mychart
+helm pull oci://docker.io/moshelederman/project-stars
+helm install [RELEASE_NAME] project-stars.tgz
 ```
 
 ## CI/CD Workflow
