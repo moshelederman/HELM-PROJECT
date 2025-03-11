@@ -23,41 +23,13 @@ Project Stars is a cloud-native application that leverages CI/CD pipelines, cont
 - **GitOps**: ArgoCD
 - **Security**: Bandit (Python security scanner)
 
-## Setup & Installation
-### Prerequisites
-Ensure you have the following installed:
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
-- [Kubernetes CLI (kubectl)](https://kubernetes.io/docs/tasks/tools/)
-- [Terraform](https://developer.hashicorp.com/terraform/downloads)
-- [Helm](https://helm.sh/docs/intro/install/)
-- [Google Cloud SDK](https://cloud.google.com/sdk/docs/install)
-
 ### Clone the repository
 ```sh
-git clone https://github.com/your-repo/project-stars.git
-cd project-stars
+git clone https://github.com/moshelederman/project-stars.git
 ```
 
-### Run locally with Docker Compose
-```sh
-cd app
-docker-compose up --build -d
-```
-
-### Deploy using Terraform & Helm
-#### 1. Initialize and apply Terraform configuration
-```sh
-terraform init
-terraform apply -auto-approve
-```
-
-#### 2. Configure `kubectl` to use GKE
-```sh
-gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GKE_REGION
-```
-
-#### 3. Install application using Helm
+### Deploy using Helm
+#### Install application using Helm
 ```sh
 helm upgrade --install project-stars ./mychart
 ```
@@ -83,21 +55,12 @@ helm upgrade --install project-stars ./mychart
 ### Cleanup Job
 1. **Delete Old Docker Images** - Removes Docker images older than 30 days from Docker Hub.
 
-## Accessing the Application
+### Accessing the Application
 Once deployed, you can access the application at:
-```sh
-kubectl get svc --all-namespaces | grep -v '<none>' | awk '{print "web url: http://"$2":5000"}'
-```
 
 ### Grafana Credentials
-```sh
-kubectl get secret --namespace monitor grafana -o jsonpath="{.data.admin-password}" | base64 --decode
-```
 
 ### ArgoCD Credentials
-```sh
-kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd | base64 --decode
-```
 
 ## Contributing
 1. Fork the repository.
