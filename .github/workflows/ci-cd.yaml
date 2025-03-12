@@ -215,7 +215,7 @@ jobs:
           helm repo add grafana https://grafana.github.io/helm-charts
           helm repo update
           helm upgrade --install grafana grafana/grafana -n monitor -f grafana/values.yaml
-          helm upgrade --install loki grafana/loki-stack -n monitor --set loki.image.tag=2.9.3 # The upgrade to version `2.9.3` of Loki was performed to resolve a bug where Grafana fails to read data from Loki in other versions.
+          helm upgrade --install loki grafana/loki-stack -n monitor -f loki/values.yaml --set loki.image.tag=2.9.3  # The upgrade to version `2.9.3` of Loki was performed to resolve a bug where Grafana fails to read data from Loki in other versions.
           kubectl apply -f grafana/grafana-dashboard-configmap.yaml
 
       - name: Install Helm Stars Project

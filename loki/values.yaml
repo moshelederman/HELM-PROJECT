@@ -1,0 +1,8 @@
+livenessProbe:
+  httpGet:
+    path: /metrics
+    port: 3100
+readinessProbe:
+  httpGet:
+    path: /metrics
+    port: 3100
