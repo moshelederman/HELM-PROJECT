@@ -7,7 +7,7 @@ datasources:
         uid: prometheus
         url: http://prometheus-kube-prometheus-prometheus.monitor:9090/
         access: proxy
-        isDefault: true  # ✅ Prometheus הוא ברירת המחדל
+        isDefault: true
         jsonData:
           httpMethod: POST
           timeInterval: 30s
@@ -17,7 +17,7 @@ datasources:
         uid: alertmanager
         url: http://prometheus-kube-prometheus-alertmanager.monitor:9093/
         access: proxy
-        isDefault: false  # ❌ לא מסומן כברירת מחדל
+        isDefault: false
         jsonData:
           handleGrafanaManagedAlerts: false
           implementation: prometheus
