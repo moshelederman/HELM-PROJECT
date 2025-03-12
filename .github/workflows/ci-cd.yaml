@@ -251,7 +251,7 @@ Delete_Old_Files:
 
         echo "🔑 Authentication successful"
 
-        DAYS_OLD=25
+        DAYS_OLD=15
         CUTOFF_DATE=$(date -d "$DAYS_OLD days ago" +%s)
 
         # Fetch all tags and sort them by date
