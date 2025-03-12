@@ -1,3 +1,4 @@
+![Diagram Stars Project](stars-project.drawio.svg)
 # Project Stars
 
 ## Overview
