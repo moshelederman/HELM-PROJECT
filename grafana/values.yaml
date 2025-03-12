@@ -27,7 +27,7 @@ grafana:
     default: grafana-dashboard
 
 sidecar:
-  dashboards:
-    enabled: fales
-    #label: grafana_dashboard
-    #folder: /var/lib/grafana/dashboards
+   dashboards:
+     enabled: true
+     label: grafana_dashboard
+     folder: /var/lib/grafana/dashboards
