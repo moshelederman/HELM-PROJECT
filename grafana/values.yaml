@@ -7,16 +7,17 @@ datasources:
         uid: prometheus
         url: http://prometheus-kube-prometheus-prometheus.monitor:9090/
         access: proxy
-        isDefault: true
+        isDefault: true  # ✅ Prometheus הוא ברירת המחדל
         jsonData:
           httpMethod: POST
           timeInterval: 30s
+
       - name: "Alertmanager"
         type: alertmanager
         uid: alertmanager
         url: http://prometheus-kube-prometheus-alertmanager.monitor:9093/
         access: proxy
-        isDefault: false
+        isDefault: false  # ❌ לא מסומן כברירת מחדל
         jsonData:
           handleGrafanaManagedAlerts: false
           implementation: prometheus
@@ -25,8 +26,8 @@ grafana:
   dashboardsConfigMaps:
     default: grafana-dashboard
 
-  sidecar:
-    dashboards:
-      enabled: true
-      label: grafana_dashboard
-      folder: /var/lib/grafana/dashboards
+sidecar:
+  dashboards:
+    enabled: true
+    label: grafana_dashboard
+    folder: /var/lib/grafana/dashboards
