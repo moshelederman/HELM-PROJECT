@@ -264,13 +264,15 @@ jobs:
             RESPONSE=$(curl -s -H "Authorization: Bearer $TOKEN" \
               "https://hub.docker.com/v2/repositories/$DOCKER_USERNAME/$DOCKER_REPO/tags/?page=$PAGE&page_size=100")
 
-            TAGS=$(echo "$RESPONSE" | jq -r '.results[]? | "\(.last_updated) \(.name)"')
+            TAGS=$(echo "$RESPONSE" | jq -r '.results[]? | {name: .name, date: .last_updated} | @base64')
             [ -z "$TAGS" ] && break
 
-            while read -r DATE NAME; do
-              [ -z "$NAME" ] && continue
+            for TAG in $TAGS; do
+              DATA=$(echo "$TAG" | base64 --decode)
+              NAME=$(echo "$DATA" | jq -r '.name')
+              DATE=$(echo "$DATA" | jq -r '.date')
               ALL_TAGS+=("$DATE $NAME")
-            done <<< "$TAGS"
+            done
 
             PAGE=$((PAGE + 1))
           done
