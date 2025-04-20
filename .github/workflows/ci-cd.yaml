@@ -246,43 +246,49 @@ jobs:
       - name: 🔐 Docker login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: 🧹 Delete old tags
+      - name: 🧹 Delete old tags (keeping 10 most recent)
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_REPO: project-stars
           DAYS_OLD: 20
         run: |
-          CUTOFF_DATE=$(date -d "$DAYS_OLD days ago" +%s)
-          PAGE=1
-
           TOKEN=$(curl -s -H "Content-Type: application/json" -X POST \
             -d '{"username": "'"$DOCKER_USERNAME"'", "password": "'"$DOCKER_PASSWORD"'"}' \
             https://hub.docker.com/v2/users/login/ | jq -r .token)
 
+          ALL_TAGS=()
+          PAGE=1
           while true; do
             echo "📦 Processing page: $PAGE"
             RESPONSE=$(curl -s -H "Authorization: Bearer $TOKEN" \
               "https://hub.docker.com/v2/repositories/$DOCKER_USERNAME/$DOCKER_REPO/tags/?page=$PAGE&page_size=100")
 
-            TAGS=$(echo "$RESPONSE" | jq -r '.results[]? | "\(.name) \(.last_updated)"')
+            TAGS=$(echo "$RESPONSE" | jq -r '.results[]? | "\(.last_updated) \(.name)"')
+            [ -z "$TAGS" ] && break
 
-            if [ -z "$TAGS" ]; then
-              echo "✅ No more tags to process. Stopping."
-              break
-            fi
-
-            while read -r TAG DATE; do
-              [ -z "$TAG" ] && continue
-              TAG_DATE=$(date -d "$DATE" +%s)
-              if [ "$TAG_DATE" -lt "$CUTOFF_DATE" ]; then
-                echo "🗑️  Deleting tag: $TAG"
-                curl -s -X DELETE -H "Authorization: Bearer $TOKEN" \
-                  "https://hub.docker.com/v2/repositories/$DOCKER_USERNAME/$DOCKER_REPO/tags/$TAG/"
-              else
-                echo "✅ Keeping tag: $TAG"
-              fi
+            while read -r DATE NAME; do
+              [ -z "$NAME" ] && continue
+              ALL_TAGS+=("$DATE $NAME")
             done <<< "$TAGS"
 
             PAGE=$((PAGE + 1))
+          done
+
+          SORTED_TAGS=($(printf "%s\n" "${ALL_TAGS[@]}" | sort -r))
+
+          KEEP_TAGS=($(printf "%s\n" "${SORTED_TAGS[@]}" | head -n 10 | awk '{print $2}'))
+
+          echo "✅ Keeping latest 10 tags: ${KEEP_TAGS[*]}"
+
+          for ENTRY in "${SORTED_TAGS[@]}"; do
+            NAME=$(echo "$ENTRY" | awk '{print $2}')
+            if [[ " ${KEEP_TAGS[@]} " =~ " $NAME " ]]; then
+              echo "🛑 Keeping tag: $NAME"
+              continue
+            fi
+
+            echo "🗑️  Deleting tag: $NAME"
+            curl -s -X DELETE -H "Authorization: Bearer $TOKEN" \
+              "https://hub.docker.com/v2/repositories/$DOCKER_USERNAME/$DOCKER_REPO/tags/$NAME/"
           done
