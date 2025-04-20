@@ -240,72 +240,40 @@ jobs:
           echo "argocd secret: $(kubectl get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" -n argocd | base64 --decode)"
 
   Delete_Old_Files:
-    runs-on: ubuntu-22.04
-    needs: Build
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Delete old Files
+      - name: 🐳 Install prerequisites
         run: |
-          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST \
-            -d '{"username": "${{ secrets.DOCKER_USERNAME }}", "password": "${{ secrets.DOCKER_PASSWORD }}"}' \
-            https://hub.docker.com/v2/users/login/ | jq -r .token)
+          sudo apt-get update
+          sudo apt-get install -y jq curl
 
-          echo "🔑 Authentication successful"
+      - name: 🔐 Docker login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-          DAYS_OLD=20
+      - name: 🧰 Install hub-tool
+        run: |
+          curl -sLO https://github.com/docker/hub-tool/releases/download/v0.4.0/hub-tool_linux_amd64.tar.gz
+          tar -xzf hub-tool_linux_amd64.tar.gz
+          sudo mv hub-tool /usr/local/bin/
+          hub-tool --version
+
+      - name: 🧹 Delete old tags
+        env:
+          REPO: ${{ secrets.DOCKER_USERNAME }}/project-stars
+          DAYS_OLD: 20
+        run: |
           CUTOFF_DATE=$(date -d "$DAYS_OLD days ago" +%s)
 
-          # Fetch all tags and sort them by date
-          ALL_TAGS=()
-          PAGE=1
-          while true; do
-            echo "📦 Fetching page $PAGE..."
-            RESPONSE=$(curl -s -H "Authorization: Bearer $TOKEN" \
-              "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}/tags/?page=$PAGE&page_size=100")
+          TAGS=$(curl -s "https://hub.docker.com/v2/repositories/$REPO/tags?page_size=100" | jq -r '.results[] | "\(.name) \(.last_updated)"')
 
-            if [[ -z "$RESPONSE" || "$RESPONSE" == "null" || "$(echo $RESPONSE | jq '.results | length')" -eq 0 ]]; then
-              echo "✅ No more images found. Stopping."
-              break
-            fi
-
-            IMAGE_TAGS=$(echo "$RESPONSE" | jq -r '.results[] | {name: .name, date: .last_updated} | @base64')
-
-            for TAG in $IMAGE_TAGS; do
-              DATA=$(echo $TAG | base64 --decode)
-              IMAGE_NAME=$(echo $DATA | jq -r '.name')
-              IMAGE_DATE=$(echo $DATA | jq -r '.date')
-              IMAGE_TIMESTAMP=$(date -d "$IMAGE_DATE" +%s)
-              
-              # Add tags to the list
-              ALL_TAGS+=("$IMAGE_TIMESTAMP $IMAGE_NAME")
-            done
-
-            PAGE=$((PAGE + 1))
-          done
-
-          # Sort tags from newest to oldest
-          SORTED_TAGS=($(printf "%s\n" "${ALL_TAGS[@]}" | sort -rn))
-
-          # Keep the 10 most recent tags
-          KEEP_TAGS=()
-          for i in {0..9}; do
-            KEEP_TAGS+=($(echo "${SORTED_TAGS[$i]}" | awk '{print $2}'))
-          done
-
-          # Delete old images that are not in the 10 most recent ones
-          for TAG in "${SORTED_TAGS[@]}"; do
-            IMAGE_TIMESTAMP=$(echo "$TAG" | awk '{print $1}')
-            IMAGE_NAME=$(echo "$TAG" | awk '{print $2}')
-
-            if [[ " ${KEEP_TAGS[@]} " =~ " ${IMAGE_NAME} " ]]; then
-              echo "🛑 Keeping latest image: $IMAGE_NAME"
-              continue
-            fi
-
-            if [ "$IMAGE_TIMESTAMP" -lt "$CUTOFF_DATE" ]; then
-              echo "🗑️  Deleting old image: $IMAGE_NAME"
-              curl -s -X DELETE -H "Authorization: Bearer $TOKEN" \
-                "https://hub.docker.com/v2/repositories/${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}/tags/$IMAGE_NAME/"
+          while read -r TAG DATE; do
+            [ -z "$TAG" ] && continue
+            TAG_DATE=$(date -d "$DATE" +%s)
+            if [ "$TAG_DATE" -lt "$CUTOFF_DATE" ]; then
+              echo "🗑️  Deleting tag: $TAG"
+              hub-tool tag rm "$REPO:$TAG"
             else
-              echo "✅ Image $IMAGE_NAME is recent, skipping."
+              echo "✅ Keeping tag: $TAG"
             fi
-          done
+          done <<< "$TAGS"
