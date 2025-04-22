@@ -57,6 +57,10 @@ def display_images():
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {e}"}), 500
 
+@app.route('/about')
+def about():
+    return render_template('about.html', name="משה לדרמן", description="זהו הפרויקט הראשון שלי בתחום ה-DevOps. אני לומד ומשתפר כל יום!")
+
 @app.route('/metrics')
 def metrics():
     return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
