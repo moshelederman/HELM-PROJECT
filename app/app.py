@@ -65,6 +65,10 @@ def about():
 def project():
     return render_template('project.html')
 
+@app.route('/lederman')
+def lederman():
+    return render_template('lederman.html')
+
 @app.route('/metrics')
 def metrics():
     return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
