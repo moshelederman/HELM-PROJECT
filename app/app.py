@@ -59,7 +59,7 @@ def display_images():
 
 @app.route('/about')
 def about():
-    return render_template('about.html', name="משה לדרמן", description="זהו הפרויקט הראשון שלי בתחום ה-DevOps. אני לומד ומשתפר כל יום!")
+    return render_template('about.html')
 
 @app.route('/metrics')
 def metrics():

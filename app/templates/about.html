@@ -1,28 +1,42 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>אודות</title>
+    <title>About Me</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            direction: rtl;
-            text-align: right;
-            padding: 2rem;
-            background-color: #f9f9f9;
-        }
-        h1 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: ltr;
+            text-align: left;
+            background-color: #f0f4f8;
+            padding: 3rem;
             color: #333;
         }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 2rem 3rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
         p {
-            font-size: 1.2rem;
-            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
-    <h1>אודות</h1>
-    <p>שלום, שמי {{ name }}.</p>
-    <p>{{ description }}</p>
+    <div class="container">
+        <h1>About Me</h1>
+        <p>Hello, my name is Moshe Lederman.</p>
+        <p>I am an aspiring DevOps engineer and this is my first official project in the field. I have a strong passion for learning new technologies, building automated solutions, and improving system efficiency. Every day, I explore tools like Docker, Kubernetes, CI/CD pipelines, and cloud platforms. My goal is to become a highly skilled professional who can bridge the gap between development and operations in modern software environments.</p>
+    </div>
 </body>
 </html>
