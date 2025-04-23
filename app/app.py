@@ -61,6 +61,10 @@ def display_images():
 def about():
     return render_template('about.html')
 
+@app.route('/project')
+def project():
+    return render_template('project.html')
+
 @app.route('/metrics')
 def metrics():
     return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
