@@ -12,16 +12,45 @@
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: #ffffff;
       min-height: 100vh;
+      padding-top: 100px;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #1b263b;
+      padding: 1rem 2rem;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      padding: 4rem;
-      overflow-x: hidden;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffd166;
     }
 
     .content {
       max-width: 850px;
+      margin: auto;
       text-align: left;
+      padding: 2rem;
       animation: fadeIn 1s ease-in-out;
     }
 
@@ -30,7 +59,6 @@
       font-weight: 800;
       margin-bottom: 1.5rem;
       color: #00d8ff;
-      text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
     }
 
     p {
@@ -57,27 +85,25 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>✨ Project Stars</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/project">Project</a>
+    </nav>
+  </header>
+
   <div class="content">
     <h1>About Me</h1>
     <p>Hello, my name is Moshe Lederman.</p>
-    <p>
-      I am an aspiring DevOps engineer passionate about automation, cloud architecture,
-      and system reliability. I'm currently exploring Docker, Kubernetes, Terraform, CI/CD pipelines,
-      and observability tools like Prometheus and Grafana. My goal is to simplify and scale infrastructure
-      for robust applications.
-    </p>
+    <p>I am an aspiring DevOps engineer passionate about automation, cloud architecture, and system reliability...</p>
     <div class="icons">
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" />
       <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" alt="Kubernetes" />

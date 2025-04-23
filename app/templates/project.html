@@ -11,16 +11,46 @@
       padding: 0;
       background: linear-gradient(135deg, #1d2671, #c33764);
       color: #ffffff;
+      padding-top: 100px;
       min-height: 100vh;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #1b263b;
+      padding: 1rem 2rem;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      padding: 4rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    nav a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffd166;
     }
 
     .container {
       max-width: 900px;
+      margin: auto;
       text-align: left;
+      padding: 2rem;
       animation: fadeIn 1s ease-in-out;
     }
 
@@ -28,14 +58,13 @@
       font-size: 3rem;
       font-weight: 800;
       color: #ffe082;
-      margin-bottom: 1.2rem;
     }
 
     h2 {
       font-size: 1.75rem;
       font-weight: 600;
-      margin-top: 2rem;
       color: #ffccbc;
+      margin-top: 2rem;
     }
 
     ul, p {
@@ -44,29 +73,25 @@
       color: #fce4ec;
     }
 
-    ul {
-      margin-left: 1.2rem;
-    }
-
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>✨ Project Stars</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/project">Project</a>
+    </nav>
+  </header>
+
   <div class="container">
     <h1>🚀 Final Project: Project Stars</h1>
-    <p>
-      Project Stars is a cloud-native DevOps application designed to streamline CI/CD workflows, infrastructure provisioning, and monitoring on GKE.
-    </p>
-
+    <p>Project Stars is a cloud-native DevOps application designed to streamline CI/CD workflows...</p>
     <h2>✨ Key Features</h2>
     <ul>
       <li>CI/CD via GitHub Actions</li>
@@ -78,7 +103,6 @@
       <li>GitOps using ArgoCD</li>
       <li>Automated cleanup of old Docker images</li>
     </ul>
-
     <h2>🛠️ Technologies Used</h2>
     <ul>
       <li>GitHub Actions</li>
@@ -88,11 +112,8 @@
       <li>Prometheus, Grafana, Loki</li>
       <li>ArgoCD</li>
     </ul>
-
     <h2>📦 CI/CD Workflow Overview</h2>
-    <p>
-      The project includes automated building, testing, packaging, deploying, and monitoring using advanced DevOps tools integrated into GitHub Actions workflows and deployed on Google Cloud.
-    </p>
+    <p>The project includes automated building, testing, packaging, deploying, and monitoring using GitHub Actions and GCP.</p>
   </div>
 </body>
 </html>
