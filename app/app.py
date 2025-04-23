@@ -73,6 +73,10 @@ def lederman():
 def metrics():
     return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
 
+@app.route('/shiduchim')
+def shiduchim():
+    return render_template('shiduchim.html')
+
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port) # nosec
