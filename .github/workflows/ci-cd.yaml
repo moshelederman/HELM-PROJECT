@@ -207,16 +207,19 @@ jobs:
 
       - name: Install Prometheus, Grafana and Loki
         run: |
-          kubectl get namespace monitor || kubectl create namespace monitor 
+          kubectl get namespace monitor || kubectl create namespace monitor
+
+          kubectl apply -f grafana/grafana-dashboard-configmap.yaml
+
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
           helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -f prometheus/values.yaml -n monitor --create-namespace
+          
           kubectl wait --for condition=established --timeout=30s crd/servicemonitors.monitoring.coreos.com
+
           helm repo add grafana https://grafana.github.io/helm-charts
           helm repo update
-          helm upgrade --install grafana grafana/grafana -n monitor -f grafana/values.yaml
           helm upgrade --install loki grafana/loki-stack -n monitor -f loki/values.yaml --set loki.image.tag=2.9.3  # The upgrade to version `2.9.3` of Loki was performed to resolve a bug where Grafana fails to read data from Loki in other versions.
-          kubectl apply -f grafana/grafana-dashboard-configmap.yaml
 
       - name: Install Helm Stars Project
         run: |
@@ -251,7 +254,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_REPO: project-stars
-          DAYS_OLD: 15
+          DAYS_OLD: 30
         run: |
           CUTOFF_DATE=$(date -d "$DAYS_OLD days ago" +%s)
           PAGE=1
