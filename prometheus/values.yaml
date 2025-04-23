@@ -1,4 +1,24 @@
-prometheus: 
-  enabled: true 
-  serviceMonitorSelector: {} # Allows Prometheus to discover external ServiceMonitors 
-  serviceMonitorSelectorNilUsesHelmValues: false # Prevents Helm from overriding the selector
+prometheus:
+  enabled: true
+  serviceMonitorSelector: {}
+  serviceMonitorSelectorNilUsesHelmValues: false
+
+grafana:
+  enabled: true
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      folder: /tmp/dashboards
+      searchNamespace: "monitor"
+  dashboardsConfigMaps:
+    default: grafana-dashboard
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://prometheus-kube-prometheus-prometheus.monitor:9090/
+          isDefault: true
