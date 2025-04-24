@@ -254,7 +254,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_REPO: project-stars
-          DAYS_OLD: 30
+          DAYS_OLD: 31
         run: |
           CUTOFF_DATE=$(date -d "$DAYS_OLD days ago" +%s)
           PAGE=1
